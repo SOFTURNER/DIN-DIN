@@ -76,7 +76,7 @@ h4 {
     radial-gradient(1200px 600px at 10% -10%, rgba(22, 163, 74, 0.12), transparent 55%),
     radial-gradient(900px 500px at 90% 110%, rgba(16, 185, 129, 0.1), transparent 50%),
     #eef1f4;
-}
+} 
 
 .page-shell > main {
   flex: 1;
