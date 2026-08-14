@@ -18,31 +18,18 @@
   </head>
   <body>
     <div class="page-shell">
-      <header class="topbar">
-        <div class="container nav-wrap">
-          <a href="#home" class="brand" aria-label="Digital Impact Network home">
-            <span class="brand-mark">DIN</span>
-            <span class="brand-text">Digital Impact Network</span>
-          </a>
+      <header class="din-glass din-header">
+        <a href="index.html" class="din-header__brand" aria-label="Digital Impact Network home">
+          <span class="din-dash__mark">DIN</span>
+          <span class="din-header__name">Digital Impact Network</span>
+        </a>
 
-          <button class="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+        <nav class="din-header__nav" aria-label="Primary">
+          <a href="index.html" aria-current="page">About us</a>
+          <a href="mapping.html">Mapping</a>
+        </nav>
 
-          <nav class="main-nav">
-            <a href="#network">Network</a>
-            <a href="#leaders">Leaders</a>
-            <a href="#investors">Investors</a>
-            <a href="#startups">Startups</a>
-            <a href="mapping.html">Mapping</a>
-            <a href="ai-matching.html">AI Matching</a>
-            <a href="#contact">Contact</a>
-          </nav>
-
-          <a href="#contact" class="button button-primary nav-button">Request Access</a>
-        </div>
+        <a href="contact.html" class="din-header__cta">Request Access</a>
       </header>
 
       <main id="home">
@@ -272,43 +259,20 @@
         </section>
       </main>
 
-      <footer id="contact" class="site-footer">
-        <div class="container footer-grid">
-          <div>
-            <a href="#home" class="brand footer-brand">
-              <span class="brand-mark">DIN</span>
-              <span class="brand-text">Digital Impact Network</span>
-            </a>
-            <p>Connecting founders, leaders, and investors to drive meaningful digital growth.</p>
-          </div>
-
-          <div>
-            <h4>Explore</h4>
-            <ul>
-              <li><a href="#network">Network</a></li>
-              <li><a href="#leaders">Leaders</a></li>
-              <li><a href="#investors">Investors</a></li>
-              <li><a href="mapping.html">Mapping</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4>Contact</h4>
-            <ul>
-              <li><a href="mailto:hello@digitalimpactnetwork.com">hello@digitalimpactnetwork.com</a></li>
-              <li><a href="tel:+12125550198">+1 (212) 555-0198</a></li>
-              <li>New York • London • Nairobi</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="container footer-bottom">
-          <span>© <span id="year"></span> Digital Impact Network</span>
-          <span>Built for connection, capital, and momentum.</span>
-        </div>
+      <footer id="contact" class="din-glass din-footer">
+        <p class="din-footer__copy">© <span id="year"></span> Digital Impact Network</p>
+        <nav class="din-footer__links" aria-label="Footer">
+          <a href="index.html">About us</a>
+          <a href="mapping.html">Mapping</a>
+          <a href="contact.html">Contact</a>
+          <a href="mailto:hello@digitalimpactnetwork.com">hello@digitalimpactnetwork.com</a>
+        </nav>
+        <p class="din-footer__tag">Built for connection, capital, and momentum.</p>
       </footer>
     </div>
 
     <script src="script.js"></script>
   </body>
 </html>
+
+

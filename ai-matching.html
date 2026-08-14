@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="styles.css" />
   <style>
     .matching-container {
-      padding: 74px 0;
+      padding: var(--space-section) 0;
     }
 
     .viz-wrapper {
@@ -563,31 +563,18 @@
 </head>
 <body>
   <div class="page-shell">
-    <header class="topbar">
-      <div class="container nav-wrap">
-        <a href="index.html" class="brand" aria-label="Digital Impact Network home">
-          <span class="brand-mark">DIN</span>
-          <span class="brand-text">Digital Impact Network</span>
-        </a>
+    <header class="din-glass din-header">
+      <a href="index.html" class="din-header__brand" aria-label="Digital Impact Network home">
+        <span class="din-dash__mark">DIN</span>
+        <span class="din-header__name">Digital Impact Network</span>
+      </a>
 
-        <button class="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+      <nav class="din-header__nav" aria-label="Primary">
+        <a href="index.html">About us</a>
+        <a href="mapping.html">Mapping</a>
+      </nav>
 
-        <nav class="main-nav">
-          <a href="index.html#network">Network</a>
-          <a href="index.html#leaders">Leaders</a>
-          <a href="index.html#investors">Investors</a>
-          <a href="index.html#startups">Startups</a>
-          <a href="mapping.html">Mapping</a>
-          <a href="ai-matching.html">AI Matching</a>
-          <a href="index.html#contact">Contact</a>
-        </nav>
-
-        <a href="index.html#contact" class="button button-primary nav-button">Request Access</a>
-      </div>
+      <a href="contact.html" class="din-header__cta">Request Access</a>
     </header>
 
     <main>
@@ -595,8 +582,8 @@
         <div class="container">
           <div class="section-heading">
             <span class="eyebrow">Powered by AI & LinkedIn</span>
-            <h1 style="font-size: clamp(2.5rem, 5vw, 3.5rem); margin: 12px 0 0 0;">Intelligent Matching</h1>
-            <p style="color: var(--muted); margin-top: 12px; max-width: 600px;">
+            <h1>Intelligent Matching</h1>
+            <p>
               Our AI engine analyzes professional profiles, experience, and goals from LinkedIn to create optimal connections. Visualize how the network identifies matching opportunities between professionals, investors, and startups.
             </p>
           </div>
@@ -645,19 +632,19 @@
               Our AI matching engine analyzes three distinct clusters of the innovation ecosystem:
             </p>
             <ul class="match-list">
-              <li><strong style="color: #0ea5e9;">🔵 AI/ML & Enterprise</strong> - OpenAI, Anthropic, Hugging Face connecting with top talent and enterprise investors (Sequoia, a16z)</li>
-              <li><strong style="color: #f59e0b;">🟡 Cloud Infrastructure</strong> - Databricks, HashiCorp, Snyk with DevOps experts and infrastructure-focused VCs</li>
-              <li><strong style="color: #16a34a;">🟢 Climate Tech & Sustainability</strong> - Commonwealth Fusion, Twelve, Form Energy with climate investors (Breakthrough Energy)</li>
-              <li><strong style="color: #a855f7;">🟣 Enterprise Players</strong> - Google AI, AWS, Tesla Energy providing strategic partnerships and resources</li>
+              <li><strong style="color: #0ea5e9;">ðŸ”µ AI/ML & Enterprise</strong> - OpenAI, Anthropic, Hugging Face connecting with top talent and enterprise investors (Sequoia, a16z)</li>
+              <li><strong style="color: #f59e0b;">ðŸŸ¡ Cloud Infrastructure</strong> - Databricks, HashiCorp, Snyk with DevOps experts and infrastructure-focused VCs</li>
+              <li><strong style="color: #16a34a;">ðŸŸ¢ Climate Tech & Sustainability</strong> - Commonwealth Fusion, Twelve, Form Energy with climate investors (Breakthrough Energy)</li>
+              <li><strong style="color: #a855f7;">ðŸŸ£ Enterprise Players</strong> - Google AI, AWS, Tesla Energy providing strategic partnerships and resources</li>
             </ul>
           </div>
 
-          <div style="margin-top: 40px; padding: 28px; background: linear-gradient(135deg, rgba(22, 163, 74, 0.08), rgba(16, 185, 129, 0.06)); border: 1px solid rgba(22, 163, 74, 0.2); border-radius: 16px;">
-            <h3 style="margin: 0 0 12px 0; color: var(--text);">Ready to Connect?</h3>
-            <p style="margin: 0 0 16px 0; color: var(--muted);">
+          <div class="matching-cta">
+            <h3>Ready to Connect?</h3>
+            <p>
               Connect your LinkedIn profile to start receiving AI-powered recommendations tailored to your professional goals.
             </p>
-            <a href="#contact" class="button button-primary">Connect LinkedIn API</a>
+            <a href="contact.html" class="button button-primary">Connect LinkedIn API</a>
           </div>
         </div>
       </div>
@@ -674,7 +661,7 @@
         </div>
 
         <div style="background: linear-gradient(135deg, rgba(22, 163, 74, 0.1), rgba(16, 185, 129, 0.05)); border-radius: 12px; padding: 16px; margin-bottom: 24px; border-left: 4px solid #16a34a;">
-          <h4 style="margin: 0 0 8px 0; color: #16a34a;">💎 Value Proposition</h4>
+          <h4 style="margin: 0 0 8px 0; color: #16a34a;">ðŸ’Ž Value Proposition</h4>
           <p style="margin: 0; color: var(--text); font-weight: 500;" id="nodeValueProp">Select a node to see their value proposition</p>
         </div>
 
@@ -683,19 +670,19 @@
         </div>
 
         <div class="business-case-section">
-          <h4>🎯 The Problem</h4>
+          <h4>ðŸŽ¯ The Problem</h4>
           <p>Impact founders like <strong>Alex</strong> (biological water treatment) and <strong>Maria</strong> (earthquake prediction AI) have brilliant solutions but struggle to find short-term business cases and funding for pilots. The core challenge: connecting with companies willing to pilot new technologies.</p>
           <div class="problem-example">
-            💡 <strong>Status Quo:</strong> It's hard for impact founders to reach pilot-ready companies, and difficult to build a business case beyond the product's core purpose that secures short-term funding.
+            ðŸ’¡ <strong>Status Quo:</strong> It's hard for impact founders to reach pilot-ready companies, and difficult to build a business case beyond the product's core purpose that secures short-term funding.
           </div>
         </div>
 
         <div class="business-case-section">
-          <h4>✨ Building a Winning Business Case</h4>
+          <h4>âœ¨ Building a Winning Business Case</h4>
           <p>Instead of waiting for companies to need your core product, we help startups identify <strong>immediate value propositions</strong> that solve corporate pain points:</p>
           
           <div style="background: #f0fdf4; border-left: 4px solid #16a34a; padding: 16px; border-radius: 6px; margin: 14px 0;">
-            <strong style="color: #16a34a;">💰 Profitability Pathways</strong>
+            <strong style="color: #16a34a;">ðŸ’° Profitability Pathways</strong>
             <div style="margin-top: 10px; font-size: 0.95rem; color: var(--text);">
               <p style="margin: 6px 0;"><strong>Revenue Generation:</strong> License the technology for $X/month, generating recurring revenue from day 1</p>
               <p style="margin: 6px 0;"><strong>Cost Savings:</strong> Help corporates reduce operational costs (labor, energy, waste) - share 20-30% of annual savings</p>
@@ -706,18 +693,18 @@
         </div>
 
         <div class="business-case-section">
-          <h4>🤝 How Pilots Become Profitable</h4>
+          <h4>ðŸ¤ How Pilots Become Profitable</h4>
           <p><strong>Phase 1 (Months 1-3):</strong> Pilot deployment - startup provides tech, corporate tests with real data</p>
           <p><strong>Phase 2 (Months 4-6):</strong> Proof of value - measure ROI, cost savings, or efficiency gains</p>
           <p><strong>Phase 3 (Months 7+):</strong> Commercial scaling - startup generates $50K-$500K+ annual recurring revenue (ARR)</p>
           
           <div class="problem-example">
-            📊 <strong>Real Example:</strong> Water treatment startup reduces corporate water costs by $100K/year → Split 25% = $25K/year pilot revenue. Scale to 10 corporates = $250K ARR within 18 months.
+            ðŸ“Š <strong>Real Example:</strong> Water treatment startup reduces corporate water costs by $100K/year â†’ Split 25% = $25K/year pilot revenue. Scale to 10 corporates = $250K ARR within 18 months.
           </div>
         </div>
 
         <div class="business-case-section">
-          <h4>🎯 What Makes a Corporate Pilot-Ready</h4>
+          <h4>ðŸŽ¯ What Makes a Corporate Pilot-Ready</h4>
           <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
             <li>Has a measurable pain point (cost, efficiency, compliance)</li>
             <li>Budget to test ($10K-$100K pilot investment)</li>
@@ -728,7 +715,7 @@
         </div>
 
         <div class="business-case-section">
-          <h4>💡 Our AI Does the Matching</h4>
+          <h4>ðŸ’¡ Our AI Does the Matching</h4>
           <p>Our system identifies:</p>
           <ol style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
             <li><strong>Startup capabilities:</strong> What your tech can actually do</li>
@@ -740,14 +727,14 @@
         </div>
 
         <div class="business-case-section">
-          <h4>🎪 Competitive Landscape</h4>
+          <h4>ðŸŽª Competitive Landscape</h4>
           <ul class="competitor-list">
             <li>
               <strong>Greentown Labs</strong> - Climate-tech incubator connecting startups with corporates & pilot opportunities
               <div class="gap-text">GAP: No AI business case matching for long-term impact founders</div>
             </li>
             <li>
-              <strong>Carbon to Value Initiative</strong> - Partnership accelerator for CO₂ tech commercialization
+              <strong>Carbon to Value Initiative</strong> - Partnership accelerator for COâ‚‚ tech commercialization
               <div class="gap-text">GAP: What about startups that cannot match the core use case?</div>
             </li>
           </ul>
@@ -757,13 +744,13 @@
         </div>
 
         <div class="business-case-section">
-          <h4>🌍 Impact Vision</h4>
+          <h4>ðŸŒ Impact Vision</h4>
           <p><strong>Carbon Reduction:</strong> Direct pathway to carbon credits by reducing GHG Scope 3 emissions through pilot programs.</p>
           <p><strong>Social Impact:</strong> Create an ecosystem for climate/impact founders that reduces startup stress. Founders concentrate on building while we connect them to the right network.</p>
         </div>
 
         <div class="business-case-section">
-          <h4>🤝 What We Need From You</h4>
+          <h4>ðŸ¤ What We Need From You</h4>
           <ol style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
             <li><strong>Share Your Pilot-Ready Projects</strong> - Help us sharpen our AI matching system</li>
             <li><strong>Build the Community</strong> - Connect us to companies (any size, any industry) open to hosting pilots</li>
@@ -771,7 +758,7 @@
         </div>
 
         <div class="business-case-section">
-          <h4>👥 Why We're the Right Team</h4>
+          <h4>ðŸ‘¥ Why We're the Right Team</h4>
           <p>All of us are early-stage founders and beVisioneers who:</p>
           <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
             <li>Understand the pain point firsthand</li>
@@ -784,40 +771,15 @@
       </div>
     </div>
 
-    <footer class="site-footer">
-      <div class="container footer-grid">
-        <div class="footer-brand">
-          <a href="#" class="brand">
-            <span class="brand-mark">DIN</span>
-            <span class="brand-text">Digital Impact Network</span>
-          </a>
-          <p>Connecting people, ideas, and capital for meaningful growth.</p>
-        </div>
-        <div>
-          <h4>Platform</h4>
-          <ul>
-            <li><a href="#network">Network</a></li>
-            <li><a href="#matching">AI Matching</a></li>
-            <li><a href="#investors">Investors</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Company</h4>
-          <ul>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a href="#privacy">Privacy Policy</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span>&copy; 2024 Digital Impact Network. All rights reserved.</span>
-        <div style="display: flex; gap: 20px;">
-          <a href="#">Twitter</a>
-          <a href="#">LinkedIn</a>
-          <a href="#">GitHub</a>
-        </div>
-      </div>
+    <footer class="din-glass din-footer">
+      <p class="din-footer__copy">© <span id="year"></span> Digital Impact Network</p>
+      <nav class="din-footer__links" aria-label="Footer">
+        <a href="index.html">About us</a>
+        <a href="mapping.html">Mapping</a>
+        <a href="contact.html">Contact</a>
+        <a href="mailto:hello@digitalimpactnetwork.com">hello@digitalimpactnetwork.com</a>
+      </nav>
+      <p class="din-footer__tag">Built for connection, capital, and momentum.</p>
     </footer>
   </div>
 
@@ -825,7 +787,7 @@
   <div class="chatbot-container" id="chatbotContainer">
     <div class="chatbot-header">
       <span>Business Case Builder</span>
-      <button onclick="toggleChatbot()">−</button>
+      <button onclick="toggleChatbot()">âˆ’</button>
     </div>
     <div class="chatbot-content" id="chatMessages"></div>
     <div class="chatbot-input">
@@ -1114,7 +1076,7 @@
       },
       startup_10: {
         type: "Carbon Transformation",
-        value: "Converts CO₂ into valuable products with demonstrated pilot results",
+        value: "Converts COâ‚‚ into valuable products with demonstrated pilot results",
         impact: "Cross-industry partnerships and proven pilot-to-profitability playbook"
       },
       startup_11: {
@@ -1343,6 +1305,9 @@
       });
     }
 
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
     // Business Case Modal Functions
     function showBusinessCase(node) {
       const modal = document.getElementById('businessCaseModal');
@@ -1359,14 +1324,14 @@
       
       // Build node-specific details HTML
       let detailsHTML = `
-        <h4>🎯 Impact on Your Startup</h4>
+        <h4>ðŸŽ¯ Impact on Your Startup</h4>
         <p>${nodeInfo.impact}</p>
       `;
       
       // Add type-specific sections
       if (node.type === "professional") {
         detailsHTML += `
-          <h4>💼 How They Help</h4>
+          <h4>ðŸ’¼ How They Help</h4>
           <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
             <li>Advises on enterprise requirements and technical architecture</li>
             <li>Introduces startup to corporate decision-makers and budget holders</li>
@@ -1376,7 +1341,7 @@
         `;
       } else if (node.type === "investor") {
         detailsHTML += `
-          <h4>💰 Investment & Resources</h4>
+          <h4>ðŸ’° Investment & Resources</h4>
           <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
             <li>Provides capital for pilot execution and scaling</li>
             <li>Direct access to portfolio companies as pilot customers</li>
@@ -1386,7 +1351,7 @@
         `;
       } else if (node.type === "startup") {
         detailsHTML += `
-          <h4>🤝 Partnership Opportunities</h4>
+          <h4>ðŸ¤ Partnership Opportunities</h4>
           <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
             <li>Bundled solution combining technologies for enterprise value</li>
             <li>Cross-selling opportunities across shared customer bases</li>
@@ -1396,7 +1361,7 @@
         `;
       } else if (node.type === "company") {
         detailsHTML += `
-          <h4>🏢 Enterprise Partnership</h4>
+          <h4>ðŸ¢ Enterprise Partnership</h4>
           <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
             <li>Large-scale pilot programs with guaranteed budgets ($100K-$10M+)</li>
             <li>Direct customer acquisition at enterprise scale</li>
@@ -1411,7 +1376,7 @@
         const pilotValue = node.type === "investor" ? "$250K-$1M pilot budgets with follow-on funding" : "$500K-$10M+ pilot & commercial contracts";
         detailsHTML += `
           <div style="background: linear-gradient(135deg, rgba(22, 163, 74, 0.1), rgba(16, 185, 129, 0.05)); border-radius: 12px; padding: 16px; margin-top: 20px; border-left: 4px solid #16a34a;">
-            <h4 style="margin: 0 0 8px 0; color: #16a34a;">💎 Typical Pilot Value</h4>
+            <h4 style="margin: 0 0 8px 0; color: #16a34a;">ðŸ’Ž Typical Pilot Value</h4>
             <p style="margin: 0; color: var(--text);">${pilotValue}</p>
           </div>
         `;
@@ -1451,23 +1416,23 @@
 
     const chatbotFlow = [
       {
-        bot: "👋 Welcome to the Business Case Builder! Let's create a compelling case for your startup.\n\nFirst, what's the name of your product or company?",
+        bot: "ðŸ‘‹ Welcome to the Business Case Builder! Let's create a compelling case for your startup.\n\nFirst, what's the name of your product or company?",
         key: "productName"
       },
       {
-        bot: "Great! 🎯 Now, what's the core problem your solution solves? (Be specific - e.g., 'Reduces water consumption by 40%')",
+        bot: "Great! ðŸŽ¯ Now, what's the core problem your solution solves? (Be specific - e.g., 'Reduces water consumption by 40%')",
         key: "problem"
       },
       {
-        bot: "Perfect! 💼 Which industries or types of companies would benefit most from this? (e.g., 'Fortune 500 manufacturing, utilities, food & beverage')",
+        bot: "Perfect! ðŸ’¼ Which industries or types of companies would benefit most from this? (e.g., 'Fortune 500 manufacturing, utilities, food & beverage')",
         key: "targetCompanies"
       },
       {
-        bot: "Excellent! 💰 What's the ROI or cost savings you can deliver? (e.g., 'Save $500K annually in water costs' or 'Increase efficiency by 30%')",
+        bot: "Excellent! ðŸ’° What's the ROI or cost savings you can deliver? (e.g., 'Save $500K annually in water costs' or 'Increase efficiency by 30%')",
         key: "roi"
       },
       {
-        bot: "Awesome! ⏱️ How long until a corporate sees measurable ROI? (e.g., '6 months' or '3-4 months')",
+        bot: "Awesome! â±ï¸ How long until a corporate sees measurable ROI? (e.g., '6 months' or '3-4 months')",
         key: "timeline"
       }
     ];
@@ -1477,11 +1442,11 @@
       chatContainer.innerHTML = '';
       
       // Welcome message
-      addBotMessage("👋 Welcome! Click 'Start Business Case' below to begin building your pitch.");
+      addBotMessage("ðŸ‘‹ Welcome! Click 'Start Business Case' below to begin building your pitch.");
       
       const startBtn = document.createElement('div');
       startBtn.className = 'quick-reply-buttons';
-      startBtn.innerHTML = '<button class="quick-reply-btn" onclick="startBusinessCaseChat()">🚀 Start Business Case Builder</button>';
+      startBtn.innerHTML = '<button class="quick-reply-btn" onclick="startBusinessCaseChat()">ðŸš€ Start Business Case Builder</button>';
       chatContainer.appendChild(startBtn);
     }
 
@@ -1544,24 +1509,24 @@
     }
 
     function showBusinessCaseSummary() {
-      addBotMessage("🎉 Excellent! Your business case is ready! Here's your pitch:");
+      addBotMessage("ðŸŽ‰ Excellent! Your business case is ready! Here's your pitch:");
       
       const summary = `
-💎 BUSINESS CASE SUMMARY
+ðŸ’Ž BUSINESS CASE SUMMARY
 
-📦 Product: ${businessCaseData.productName}
-🎯 Problem Solved: ${businessCaseData.problem}
-🏢 Target Customers: ${businessCaseData.targetCompanies}
-💰 Value Proposition: ${businessCaseData.roi}
-⏱️ ROI Timeline: ${businessCaseData.timeline}
+ðŸ“¦ Product: ${businessCaseData.productName}
+ðŸŽ¯ Problem Solved: ${businessCaseData.problem}
+ðŸ¢ Target Customers: ${businessCaseData.targetCompanies}
+ðŸ’° Value Proposition: ${businessCaseData.roi}
+â±ï¸ ROI Timeline: ${businessCaseData.timeline}
 
-💡 NEXT STEPS:
+ðŸ’¡ NEXT STEPS:
 1. Use this case when approaching corporate prospects
 2. Highlight specific pain points from your target list
 3. Show pilot programs that proved ROI
 4. Propose revenue share: 25-30% of cost savings
 
-🚀 Ready to pitch to investors or corporates?
+ðŸš€ Ready to pitch to investors or corporates?
       `;
       
       const chatContainer = document.getElementById('chatMessages');
@@ -1576,9 +1541,9 @@
       const actionBtns = document.createElement('div');
       actionBtns.className = 'quick-reply-buttons';
       actionBtns.innerHTML = `
-        <button class="quick-reply-btn" onclick="startBusinessCaseChat()">📝 Create Another Case</button>
-        <button class="quick-reply-btn" onclick="downloadBusinessCase()">📥 Download Case</button>
-        <button class="quick-reply-btn" onclick="openContactForm()">🤝 Connect with Investors</button>
+        <button class="quick-reply-btn" onclick="startBusinessCaseChat()">ðŸ“ Create Another Case</button>
+        <button class="quick-reply-btn" onclick="downloadBusinessCase()">ðŸ“¥ Download Case</button>
+        <button class="quick-reply-btn" onclick="openContactForm()">ðŸ¤ Connect with Investors</button>
       `;
       chatContainer.appendChild(actionBtns);
       chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -1602,7 +1567,7 @@ ${businessCaseData.timeline}
 RECOMMENDED REVENUE MODEL
 - License: $X/month recurring revenue
 - Cost Savings Share: 25-30% of annual savings
-- Example: If saving corporate $500K/year → $125K-$150K annual partnership revenue
+- Example: If saving corporate $500K/year â†’ $125K-$150K annual partnership revenue
 
 PILOT PATHWAY
 Phase 1 (Months 1-3): Pilot deployment and testing
@@ -1620,7 +1585,7 @@ Visit: ai-matching.html`;
       element.click();
       document.body.removeChild(element);
       
-      addBotMessage("✅ Business case downloaded! Check your downloads folder.");
+      addBotMessage("âœ… Business case downloaded! Check your downloads folder.");
     }
 
     function toggleChatbot() {
@@ -1638,3 +1603,4 @@ Visit: ai-matching.html`;
   </script>
 </body>
 </html>
+
