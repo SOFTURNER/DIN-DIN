@@ -10,7 +10,7 @@ import { rankMatches, type Match } from './lib/filters'
 import { cx } from './components/ui'
 import './styles.css'
 
-const USER_NAME = 'Di Di'
+const USER_NAME = 'Lena Vos'
 const LEFT_MIN = 28
 const LEFT_MAX = 68
 const LEFT_DEFAULT = 48
