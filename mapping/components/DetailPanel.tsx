@@ -41,22 +41,22 @@ function Shell({
   children: ReactNode
 }) {
   return (
-    <aside className="pointer-events-auto flex h-full w-[368px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_24px_60px_-15px_rgba(15,23,42,0.25)]">
-      <header className="relative shrink-0 border-b border-slate-100 px-5 pt-5 pb-4">
+    <aside className="pointer-events-auto flex h-full w-[368px] flex-col overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.1)] bg-white shadow-[0_10px_25px_rgba(0,0,0,0.08)]">
+      <header className="relative shrink-0 border-b border-[rgba(0,0,0,0.1)] px-5 pt-5 pb-4">
         <span className="absolute inset-x-0 top-0 h-1" style={{ backgroundColor: accent }} />
         <button
           type="button"
           onClick={onClose}
           aria-label="Close details"
-          className="absolute top-4 right-4 rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+          className="absolute top-4 right-4 rounded-xl p-1.5 text-[#6b7280] transition hover:bg-[#f3f4f6] hover:text-[#1f2937]"
         >
           <X className="size-3.5" />
         </button>
         <p className="text-[10px] font-bold tracking-[0.14em] uppercase" style={{ color: accent }}>
           {eyebrow}
         </p>
-        <h2 className="mt-1 pr-8 text-base leading-tight font-extrabold text-slate-900">{title}</h2>
-        <p className="mt-1 text-xs font-medium text-slate-500">{subtitle}</p>
+        <h2 className="mt-1 pr-8 text-base leading-tight font-extrabold text-[#1f2937]">{title}</h2>
+        <p className="mt-1 text-xs font-medium text-[#6b7280]">{subtitle}</p>
       </header>
       <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-5 py-5">{children}</div>
     </aside>

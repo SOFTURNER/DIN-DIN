@@ -1,41 +1,27 @@
 # DIN — Digital Impact Network
 
-Local workspace for the **Mapping** and **Event finder** features.
+Static marketing site plus the **Mapping** React feature.
 
-## Structure
-
-```
-mapping/          ← self-contained feature (merge this into main)
-  index.ts        ← export: MappingPage
-  MappingPage.tsx
-  components/
-  data/
-  lib/
-  assets/
-  styles.css
-src/              ← thin Vite shell for local preview only
-  main.tsx
-```
-
-## Preview locally
+## Run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open http://localhost:5173
+- Home: http://localhost:5173/
+- Mapping: http://localhost:5173/mapping.html
 
-## Link into the main DIN site
+## Structure
 
-1. Copy/merge the `mapping/` folder into the main repo.
-2. Install peers if missing: `react-globe.gl`, `three`, `lucide-react` (+ Tailwind).
-3. Mount as a route or tab:
-
-```tsx
-import MappingPage from './mapping'
-
-<Route path="/mapping" element={<div className="h-screen"><MappingPage /></div>} />
+```
+index.html, leaders.html, …   ← site pages
+styles.css, script.js
+mapping.html                  ← Mapping section (site chrome + React mount)
+mapping/                      ← Mapping feature module (globe, filters, events)
+src/main.tsx                  ← mounts MappingPage into #root
 ```
 
-Styles ship with `MappingPage` — no separate CSS import needed.
+## Menu
+
+**Mapping** sits between Startups and AI Matching in the main nav.

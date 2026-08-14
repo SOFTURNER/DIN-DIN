@@ -150,11 +150,11 @@ export default function GlobeView({
   }, [matchOrigin, matches])
 
   return (
-    <div ref={wrapRef} className="absolute inset-0 overflow-hidden bg-[#eceff3]">
+    <div ref={wrapRef} className="absolute inset-0 overflow-hidden bg-[#f3f4f6]">
       {/* Soft floor shadow under the globe — Enerdrais-style floating look */}
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[12%] left-1/2 h-16 w-[42%] -translate-x-1/2 rounded-[100%] bg-slate-900/15 blur-2xl"
+        className="pointer-events-none absolute bottom-[12%] left-1/2 h-16 w-[42%] -translate-x-1/2 rounded-[100%] bg-black/10 blur-2xl"
       />
 
       {size.w > 0 && size.h > 0 && (

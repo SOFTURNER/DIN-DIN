@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI-powered matching visualization for DIN - connecting professionals, investors, and startups" />
+  <title>AI Matching | Digital Impact Network</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .matching-container {
+      padding: 74px 0;
+    }
+
+    .viz-wrapper {
+      position: relative;
+      width: 100%;
+      height: 700px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    #graph-container {
+      width: 100%;
+      height: 100%;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .node {
+      cursor: pointer;
+      stroke: var(--line);
+      stroke-width: 2px;
+    }
+
+    .node.professional {
+      fill: #10b981;
+    }
+
+    .node.investor {
+      fill: #16a34a;
+    }
+
+    .node.startup {
+      fill: #059669;
+    }
+
+    .node:hover {
+      stroke: var(--text);
+      stroke-width: 3px;
+    }
+
+    .link {
+      stroke: var(--line);
+      stroke-opacity: 0.6;
+      stroke-width: 1px;
+    }
+
+    .link.match {
+      stroke: #16a34a;
+      stroke-opacity: 0.8;
+      stroke-width: 2px;
+    }
+
+    .node-label {
+      font-size: 11px;
+      font-weight: 600;
+      fill: var(--text);
+      pointer-events: none;
+      text-anchor: middle;
+    }
+
+    .tooltip {
+      position: absolute;
+      background: var(--text);
+      color: var(--bg);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tooltip.visible {
+      opacity: 1;
+    }
+
+    .legend {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 12px;
+      z-index: 5;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .legend-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 32px;
+    }
+
+    .stat-card {
+      padding: 20px 24px;
+      border-radius: 16px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .info-panel {
+      margin-top: 32px;
+      padding: 24px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .info-panel h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.1rem;
+      color: var(--text);
+    }
+
+    .info-panel p {
+      margin: 0 0 8px 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .match-list {
+      list-style: none;
+      margin: 12px 0 0 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .match-item {
+      padding: 10px 12px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .match-score {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(22, 163, 74, 0.1);
+      color: var(--primary);
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-left: 8px;
+    }
+
+    @media (max-width: 980px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .viz-wrapper {
+        height: 500px;
+      }
+    }
+
+    .business-case-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .business-case-modal.active {
+      display: flex;
+    }
+
+    .business-case-content {
+      background: white;
+      border-radius: 20px;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 40px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .close-modal {
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      color: var(--muted);
+      border: none;
+      background: none;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-modal:hover {
+      color: var(--text);
+    }
+
+    .business-case-header {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--line);
+    }
+
+    .match-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 8px 0;
+    }
+
+    .match-subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    #nodeValueProp {
+      line-height: 1.6;
+    }
+
+    .business-case-section {
+      margin-bottom: 28px;
+    }
+
+    .business-case-section h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin: 0 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .business-case-section p {
+      margin: 0 0 12px 0;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .business-case-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .problem-example {
+      background: rgba(15, 165, 233, 0.05);
+      border-left: 4px solid #0ea5e9;
+      padding: 14px 16px;
+      border-radius: 6px;
+      margin: 12px 0;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .competitor-list {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 0 0;
+    }
+
+    .competitor-list li {
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      background: var(--bg-soft);
+      border-radius: 8px;
+    }
+
+    .competitor-list strong {
+      color: var(--primary);
+    }
+
+    .gap-text {
+      color: #dc2626;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-top: 6px;
+    }
+
+    .cta-button-modal {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #16a34a, #10b981);
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .cta-button-modal:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(22, 163, 74, 0.3);
+    }
+
+    /* Chatbot Styles */
+    .chatbot-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 380px;
+      height: 600px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      z-index: 95;
+      font-family: "Inter", sans-serif;
+    }
+
+    .chatbot-container.minimized {
+      height: 60px;
+      width: 60px;
+    }
+
+    .chatbot-header {
+      padding: 16px;
+      background: linear-gradient(135deg, #16a34a, #10b981);
+      color: white;
+      border-radius: 16px 16px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+    }
+
+    .chatbot-header button {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chatbot-header button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .chatbot-container.minimized .chatbot-header {
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      padding: 0;
+      justify-content: center;
+    }
+
+    .chatbot-container.minimized .chatbot-content,
+    .chatbot-container.minimized .chatbot-input {
+      display: none;
+    }
+
+    .chatbot-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chat-message {
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      max-width: 90%;
+      word-wrap: break-word;
+    }
+
+    .chat-message.bot {
+      background: var(--bg-soft);
+      color: var(--text);
+      align-self: flex-start;
+    }
+
+    .chat-message.user {
+      background: #16a34a;
+      color: white;
+      align-self: flex-end;
+    }
+
+    .chatbot-input {
+      padding: 12px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: 8px;
+    }
+
+    .chatbot-input input {
+      flex: 1;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      font-family: "Inter", sans-serif;
+    }
+
+    .chatbot-input input:focus {
+      outline: none;
+      border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+
+    .chatbot-input button {
+      background: #16a34a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .chatbot-input button:hover {
+      background: #15803d;
+    }
+
+    .quick-reply-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quick-reply-btn {
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.1), rgba(16, 185, 129, 0.05));
+      border: 1px solid rgba(22, 163, 74, 0.3);
+      color: var(--primary);
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .quick-reply-btn:hover {
+      background: rgba(22, 163, 74, 0.15);
+      border-color: rgba(22, 163, 74, 0.5);
+    }
+
+    .business-case-preview {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.85rem;
+      color: var(--text);
+      margin-top: 8px;
+    }
+
+    .business-case-preview strong {
+      color: #16a34a;
+    }
+
+    @media (max-width: 768px) {
+      .chatbot-container {
+        width: 100%;
+        height: 70%;
+        bottom: 0;
+        right: 0;
+        border-radius: 16px 16px 0 0;
+      }
+
+      .chatbot-container.minimized {
+        width: 60px;
+        height: 60px;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <a href="index.html" class="brand" aria-label="Digital Impact Network home">
+          <span class="brand-mark">DIN</span>
+          <span class="brand-text">Digital Impact Network</span>
+        </a>
+
+        <button class="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="main-nav">
+          <a href="index.html#network">Network</a>
+          <a href="index.html#leaders">Leaders</a>
+          <a href="index.html#investors">Investors</a>
+          <a href="index.html#startups">Startups</a>
+          <a href="mapping.html">Mapping</a>
+          <a href="ai-matching.html">AI Matching</a>
+          <a href="index.html#contact">Contact</a>
+        </nav>
+
+        <a href="index.html#contact" class="button button-primary nav-button">Request Access</a>
+      </div>
+    </header>
+
+    <main>
+      <div class="matching-container">
+        <div class="container">
+          <div class="section-heading">
+            <span class="eyebrow">Powered by AI & LinkedIn</span>
+            <h1 style="font-size: clamp(2.5rem, 5vw, 3.5rem); margin: 12px 0 0 0;">Intelligent Matching</h1>
+            <p style="color: var(--muted); margin-top: 12px; max-width: 600px;">
+              Our AI engine analyzes professional profiles, experience, and goals from LinkedIn to create optimal connections. Visualize how the network identifies matching opportunities between professionals, investors, and startups.
+            </p>
+          </div>
+
+          <div class="viz-wrapper">
+            <div id="graph-container"></div>
+            <div class="legend">
+              <div class="legend-item">
+                <div class="legend-dot" style="background: #0ea5e9;"></div>
+                <span>Professionals</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background: #f59e0b;"></div>
+                <span>Investors</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background: #16a34a;"></div>
+                <span>Startups</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background: #a855f7;"></div>
+                <span>Enterprise</span>
+              </div>
+            </div>
+            <div class="tooltip" id="tooltip"></div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value" data-stat="matches">0</div>
+              <div class="stat-label">Active Matches</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" data-stat="accuracy">0%</div>
+              <div class="stat-label">Match Accuracy</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" data-stat="success">0</div>
+              <div class="stat-label">Successful Connections</div>
+            </div>
+          </div>
+
+          <div class="info-panel">
+            <h3>Network Overview</h3>
+            <p>
+              Our AI matching engine analyzes three distinct clusters of the innovation ecosystem:
+            </p>
+            <ul class="match-list">
+              <li><strong style="color: #0ea5e9;">🔵 AI/ML & Enterprise</strong> - OpenAI, Anthropic, Hugging Face connecting with top talent and enterprise investors (Sequoia, a16z)</li>
+              <li><strong style="color: #f59e0b;">🟡 Cloud Infrastructure</strong> - Databricks, HashiCorp, Snyk with DevOps experts and infrastructure-focused VCs</li>
+              <li><strong style="color: #16a34a;">🟢 Climate Tech & Sustainability</strong> - Commonwealth Fusion, Twelve, Form Energy with climate investors (Breakthrough Energy)</li>
+              <li><strong style="color: #a855f7;">🟣 Enterprise Players</strong> - Google AI, AWS, Tesla Energy providing strategic partnerships and resources</li>
+            </ul>
+          </div>
+
+          <div style="margin-top: 40px; padding: 28px; background: linear-gradient(135deg, rgba(22, 163, 74, 0.08), rgba(16, 185, 129, 0.06)); border: 1px solid rgba(22, 163, 74, 0.2); border-radius: 16px;">
+            <h3 style="margin: 0 0 12px 0; color: var(--text);">Ready to Connect?</h3>
+            <p style="margin: 0 0 16px 0; color: var(--muted);">
+              Connect your LinkedIn profile to start receiving AI-powered recommendations tailored to your professional goals.
+            </p>
+            <a href="#contact" class="button button-primary">Connect LinkedIn API</a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Business Case Modal -->
+    <div class="business-case-modal" id="businessCaseModal">
+      <div class="business-case-content">
+        <button class="close-modal" onclick="closeBusinessCase()">&times;</button>
+        
+        <div class="business-case-header">
+          <h2 class="match-title" id="matchTitle">Connection Details</h2>
+          <p class="match-subtitle" id="matchSubtitle">AI-Powered Impact Matching</p>
+        </div>
+
+        <div style="background: linear-gradient(135deg, rgba(22, 163, 74, 0.1), rgba(16, 185, 129, 0.05)); border-radius: 12px; padding: 16px; margin-bottom: 24px; border-left: 4px solid #16a34a;">
+          <h4 style="margin: 0 0 8px 0; color: #16a34a;">💎 Value Proposition</h4>
+          <p style="margin: 0; color: var(--text); font-weight: 500;" id="nodeValueProp">Select a node to see their value proposition</p>
+        </div>
+
+        <div class="business-case-section" id="nodeDetailsSection">
+          <!-- Node-specific details will load here -->
+        </div>
+
+        <div class="business-case-section">
+          <h4>🎯 The Problem</h4>
+          <p>Impact founders like <strong>Alex</strong> (biological water treatment) and <strong>Maria</strong> (earthquake prediction AI) have brilliant solutions but struggle to find short-term business cases and funding for pilots. The core challenge: connecting with companies willing to pilot new technologies.</p>
+          <div class="problem-example">
+            💡 <strong>Status Quo:</strong> It's hard for impact founders to reach pilot-ready companies, and difficult to build a business case beyond the product's core purpose that secures short-term funding.
+          </div>
+        </div>
+
+        <div class="business-case-section">
+          <h4>✨ Building a Winning Business Case</h4>
+          <p>Instead of waiting for companies to need your core product, we help startups identify <strong>immediate value propositions</strong> that solve corporate pain points:</p>
+          
+          <div style="background: #f0fdf4; border-left: 4px solid #16a34a; padding: 16px; border-radius: 6px; margin: 14px 0;">
+            <strong style="color: #16a34a;">💰 Profitability Pathways</strong>
+            <div style="margin-top: 10px; font-size: 0.95rem; color: var(--text);">
+              <p style="margin: 6px 0;"><strong>Revenue Generation:</strong> License the technology for $X/month, generating recurring revenue from day 1</p>
+              <p style="margin: 6px 0;"><strong>Cost Savings:</strong> Help corporates reduce operational costs (labor, energy, waste) - share 20-30% of annual savings</p>
+              <p style="margin: 6px 0;"><strong>Efficiency Gains:</strong> Increase corporate productivity by Y%, negotiate a % of productivity gains as revenue</p>
+              <p style="margin: 6px 0;"><strong>Sustainability Credits:</strong> Generate carbon credits or regulatory compliance credits worth $Z - split revenue</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="business-case-section">
+          <h4>🤝 How Pilots Become Profitable</h4>
+          <p><strong>Phase 1 (Months 1-3):</strong> Pilot deployment - startup provides tech, corporate tests with real data</p>
+          <p><strong>Phase 2 (Months 4-6):</strong> Proof of value - measure ROI, cost savings, or efficiency gains</p>
+          <p><strong>Phase 3 (Months 7+):</strong> Commercial scaling - startup generates $50K-$500K+ annual recurring revenue (ARR)</p>
+          
+          <div class="problem-example">
+            📊 <strong>Real Example:</strong> Water treatment startup reduces corporate water costs by $100K/year → Split 25% = $25K/year pilot revenue. Scale to 10 corporates = $250K ARR within 18 months.
+          </div>
+        </div>
+
+        <div class="business-case-section">
+          <h4>🎯 What Makes a Corporate Pilot-Ready</h4>
+          <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
+            <li>Has a measurable pain point (cost, efficiency, compliance)</li>
+            <li>Budget to test ($10K-$100K pilot investment)</li>
+            <li>Clear KPIs (cost savings %, time reduction %, compliance improvement)</li>
+            <li>Timeline for ROI evaluation (typically 6 months)</li>
+            <li>Willingness to scale if pilot succeeds</li>
+          </ul>
+        </div>
+
+        <div class="business-case-section">
+          <h4>💡 Our AI Does the Matching</h4>
+          <p>Our system identifies:</p>
+          <ol style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
+            <li><strong>Startup capabilities:</strong> What your tech can actually do</li>
+            <li><strong>Corporate pain points:</strong> Where they lose money or waste time</li>
+            <li><strong>Hidden use cases:</strong> Ways your tech solves problems beyond its original purpose</li>
+            <li><strong>Financial fit:</strong> Can the pilot ROI justify a long-term contract?</li>
+            <li><strong>Decision makers:</strong> Who in the corporate has budget and urgency?</li>
+          </ol>
+        </div>
+
+        <div class="business-case-section">
+          <h4>🎪 Competitive Landscape</h4>
+          <ul class="competitor-list">
+            <li>
+              <strong>Greentown Labs</strong> - Climate-tech incubator connecting startups with corporates & pilot opportunities
+              <div class="gap-text">GAP: No AI business case matching for long-term impact founders</div>
+            </li>
+            <li>
+              <strong>Carbon to Value Initiative</strong> - Partnership accelerator for CO₂ tech commercialization
+              <div class="gap-text">GAP: What about startups that cannot match the core use case?</div>
+            </li>
+          </ul>
+          <p style="margin-top: 14px; font-style: italic; color: var(--muted);">
+            We differentiate by using AI to build alternative business cases and unlock pilots across any industry vertical.
+          </p>
+        </div>
+
+        <div class="business-case-section">
+          <h4>🌍 Impact Vision</h4>
+          <p><strong>Carbon Reduction:</strong> Direct pathway to carbon credits by reducing GHG Scope 3 emissions through pilot programs.</p>
+          <p><strong>Social Impact:</strong> Create an ecosystem for climate/impact founders that reduces startup stress. Founders concentrate on building while we connect them to the right network.</p>
+        </div>
+
+        <div class="business-case-section">
+          <h4>🤝 What We Need From You</h4>
+          <ol style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
+            <li><strong>Share Your Pilot-Ready Projects</strong> - Help us sharpen our AI matching system</li>
+            <li><strong>Build the Community</strong> - Connect us to companies (any size, any industry) open to hosting pilots</li>
+          </ol>
+        </div>
+
+        <div class="business-case-section">
+          <h4>👥 Why We're the Right Team</h4>
+          <p>All of us are early-stage founders and beVisioneers who:</p>
+          <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
+            <li>Understand the pain point firsthand</li>
+            <li>Know the importance of the right network and channels</li>
+            <li>Are entering adulthood with AI and understand how to use it responsibly to empower founders</li>
+          </ul>
+        </div>
+
+        <button class="cta-button-modal" onclick="openContactForm()">Start Your Match Journey</button>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="brand">
+            <span class="brand-mark">DIN</span>
+            <span class="brand-text">Digital Impact Network</span>
+          </a>
+          <p>Connecting people, ideas, and capital for meaningful growth.</p>
+        </div>
+        <div>
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="#network">Network</a></li>
+            <li><a href="#matching">AI Matching</a></li>
+            <li><a href="#investors">Investors</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#privacy">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2024 Digital Impact Network. All rights reserved.</span>
+        <div style="display: flex; gap: 20px;">
+          <a href="#">Twitter</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Chatbot Widget -->
+  <div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-header">
+      <span>Business Case Builder</span>
+      <button onclick="toggleChatbot()">−</button>
+    </div>
+    <div class="chatbot-content" id="chatMessages"></div>
+    <div class="chatbot-input">
+      <input 
+        type="text" 
+        id="chatInput" 
+        placeholder="Type your response..."
+        onkeypress="handleChatKeypress(event)"
+      />
+      <button onclick="sendChatMessage()">Send</button>
+    </div>
+  </div>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    // Sample data - create disjoint clusters with real examples and distinct colors
+    const data = {
+      nodes: [
+        // Cluster 1: AI/ML & Enterprise
+        { id: "prof_1", name: "Sarah Chen", type: "professional", group: 1, skills: "AI/ML, Product" },
+        { id: "prof_2", name: "Rajesh Gupta", type: "professional", group: 1, skills: "ML Engineer" },
+        { id: "prof_3", name: "Emily Zhang", type: "professional", group: 1, skills: "Data Scientist" },
+        { id: "prof_4", name: "James Patterson", type: "professional", group: 1, skills: "AI Strategy" },
+        
+        { id: "inv_1", name: "Sequoia Capital", type: "investor", group: 1, focus: "AI/ML" },
+        { id: "inv_2", name: "Andreessen Horowitz", type: "investor", group: 1, focus: "Enterprise AI" },
+        { id: "inv_3", name: "Insight Partners", type: "investor", group: 1, focus: "SaaS, AI" },
+        
+        { id: "startup_1", name: "OpenAI", type: "startup", group: 1, stage: "Series D" },
+        { id: "startup_2", name: "Anthropic", type: "startup", group: 1, stage: "Series C" },
+        { id: "startup_3", name: "Cohere", type: "startup", group: 1, stage: "Series B" },
+        { id: "startup_4", name: "Hugging Face", type: "startup", group: 1, stage: "Series D" },
+        { id: "company_1", name: "Google AI", type: "company", group: 1, industry: "Big Tech" },
+        
+        // Cluster 2: Cloud Infrastructure & DevOps
+        { id: "prof_5", name: "Marcus Davis", type: "professional", group: 2, skills: "DevOps, Cloud" },
+        { id: "prof_6", name: "Priya Sharma", type: "professional", group: 2, skills: "Kubernetes" },
+        { id: "prof_7", name: "Chen Wei", type: "professional", group: 2, skills: "Cloud Arch" },
+        { id: "prof_8", name: "Alexis Rodriguez", type: "professional", group: 2, skills: "Infrastructure" },
+        
+        { id: "inv_4", name: "Bessemer VC", type: "investor", group: 2, focus: "Infrastructure" },
+        { id: "inv_5", name: "GGV Capital", type: "investor", group: 2, focus: "Cloud" },
+        { id: "inv_6", name: "Accel Partners", type: "investor", group: 2, focus: "DevTools" },
+        
+        { id: "startup_5", name: "Databricks", type: "startup", group: 2, stage: "Series H" },
+        { id: "startup_6", name: "HashiCorp", type: "startup", group: 2, stage: "IPO" },
+        { id: "startup_7", name: "LaunchDarkly", type: "startup", group: 2, stage: "Series C" },
+        { id: "startup_8", name: "Snyk", type: "startup", group: 2, stage: "Series E" },
+        { id: "company_2", name: "AWS", type: "company", group: 2, industry: "Cloud Provider" },
+        
+        // Cluster 3: Climate Tech & Sustainability
+        { id: "prof_9", name: "Luna Patel", type: "professional", group: 3, skills: "Climate Tech" },
+        { id: "prof_10", name: "River Johnson", type: "professional", group: 3, skills: "Sustainability" },
+        { id: "prof_11", name: "Sophie Mueller", type: "professional", group: 3, skills: "Green Energy" },
+        { id: "prof_12", name: "David Okafor", type: "professional", group: 3, skills: "Environmental" },
+        
+        { id: "inv_7", name: "Breakthrough Energy", type: "investor", group: 3, focus: "Climate" },
+        { id: "inv_8", name: "Lowercarbon Capital", type: "investor", group: 3, focus: "Climate Tech" },
+        { id: "inv_9", name: "Telstra Ventures", type: "investor", group: 3, focus: "Sustainability" },
+        
+        { id: "startup_9", name: "Commonwealth Fusion", type: "startup", group: 3, stage: "Series B" },
+        { id: "startup_10", name: "Twelve", type: "startup", group: 3, stage: "Series A" },
+        { id: "startup_11", name: "Form Energy", type: "startup", group: 3, stage: "Series B" },
+        { id: "startup_12", name: "Impossible Foods", type: "startup", group: 3, stage: "Series E" },
+        { id: "company_3", name: "Tesla Energy", type: "company", group: 3, industry: "Renewables" },
+      ],
+      links: [
+        // Cluster 1: AI/ML connections
+        { source: "prof_1", target: "prof_2" },
+        { source: "prof_1", target: "prof_3" },
+        { source: "prof_2", target: "prof_4" },
+        { source: "prof_1", target: "startup_1" },
+        { source: "prof_2", target: "startup_2" },
+        { source: "prof_3", target: "startup_3" },
+        { source: "prof_4", target: "startup_4" },
+        { source: "inv_1", target: "startup_1" },
+        { source: "inv_1", target: "startup_2" },
+        { source: "inv_2", target: "startup_3" },
+        { source: "inv_2", target: "startup_4" },
+        { source: "inv_3", target: "startup_1" },
+        { source: "prof_1", target: "inv_1" },
+        { source: "prof_2", target: "inv_2" },
+        { source: "prof_3", target: "inv_3" },
+        { source: "company_1", target: "prof_1" },
+        { source: "company_1", target: "startup_2" },
+        { source: "startup_1", target: "startup_3" },
+        
+        // Cluster 2: Cloud connections
+        { source: "prof_5", target: "prof_6" },
+        { source: "prof_6", target: "prof_7" },
+        { source: "prof_7", target: "prof_8" },
+        { source: "prof_5", target: "startup_5" },
+        { source: "prof_6", target: "startup_6" },
+        { source: "prof_7", target: "startup_7" },
+        { source: "prof_8", target: "startup_8" },
+        { source: "inv_4", target: "startup_5" },
+        { source: "inv_4", target: "startup_6" },
+        { source: "inv_5", target: "startup_7" },
+        { source: "inv_5", target: "startup_8" },
+        { source: "inv_6", target: "startup_5" },
+        { source: "prof_5", target: "inv_4" },
+        { source: "prof_6", target: "inv_5" },
+        { source: "prof_7", target: "inv_6" },
+        { source: "company_2", target: "prof_5" },
+        { source: "company_2", target: "startup_6" },
+        { source: "startup_5", target: "startup_7" },
+        
+        // Cluster 3: Climate Tech connections
+        { source: "prof_9", target: "prof_10" },
+        { source: "prof_10", target: "prof_11" },
+        { source: "prof_11", target: "prof_12" },
+        { source: "prof_9", target: "startup_9" },
+        { source: "prof_10", target: "startup_10" },
+        { source: "prof_11", target: "startup_11" },
+        { source: "prof_12", target: "startup_12" },
+        { source: "inv_7", target: "startup_9" },
+        { source: "inv_7", target: "startup_10" },
+        { source: "inv_8", target: "startup_11" },
+        { source: "inv_8", target: "startup_12" },
+        { source: "inv_9", target: "startup_9" },
+        { source: "prof_9", target: "inv_7" },
+        { source: "prof_10", target: "inv_8" },
+        { source: "prof_11", target: "inv_9" },
+        { source: "company_3", target: "prof_9" },
+        { source: "company_3", target: "startup_10" },
+        { source: "startup_9", target: "startup_11" },
+      ]
+    };
+
+    // Value Proposition Mapping for Each Node
+    const nodeValuePropositions = {
+      // Professionals
+      prof_1: {
+        type: "AI/ML Expert",
+        value: "Brings deep expertise in AI/ML product strategy and can architect enterprise solutions",
+        impact: "Helps startups understand corporate AI requirements and identify hidden use cases"
+      },
+      prof_2: {
+        type: "ML Engineer",
+        value: "Can optimize algorithms for production-scale deployment and corporate infrastructure",
+        impact: "Reduces time-to-pilot from months to weeks with production-ready code"
+      },
+      prof_3: {
+        type: "Data Scientist",
+        value: "Translates corporate data into measurable KPIs and ROI metrics for pilots",
+        impact: "Proves startup's value through compelling data and financial models"
+      },
+      prof_4: {
+        type: "AI Strategy Lead",
+        value: "Bridges startup technology with corporate strategic initiatives and budget",
+        impact: "Opens doors to C-suite funding and multi-year contracts"
+      },
+      prof_5: {
+        type: "DevOps Expert",
+        value: "Ensures scalable, secure infrastructure deployment in enterprise environments",
+        impact: "Accelerates production rollout and reduces deployment risk"
+      },
+      prof_6: {
+        type: "Kubernetes Specialist",
+        value: "Containerizes and orchestrates startup solutions for cloud-native deployment",
+        impact: "Enables rapid scaling across multiple corporate locations"
+      },
+      prof_7: {
+        type: "Cloud Architect",
+        value: "Designs cost-optimized cloud infrastructure aligned with corporate governance",
+        impact: "Reduces operational costs and ensures compliance with security policies"
+      },
+      prof_8: {
+        type: "Infrastructure Lead",
+        value: "Integrates startup tech with existing corporate systems seamlessly",
+        impact: "Eliminates integration roadblocks and enables immediate go-live"
+      },
+      prof_9: {
+        type: "Climate Tech Expert",
+        value: "Understands regulatory landscape and carbon credit mechanisms",
+        impact: "Unlocks new revenue streams through carbon credit monetization"
+      },
+      prof_10: {
+        type: "Sustainability Consultant",
+        value: "Identifies ESG value and communicates impact to corporate stakeholders",
+        impact: "Justifies pilot funding through sustainability and impact metrics"
+      },
+      prof_11: {
+        type: "Green Energy Specialist",
+        value: "Optimizes energy efficiency and renewable integration opportunities",
+        impact: "Multiplies cost savings and environmental benefits"
+      },
+      prof_12: {
+        type: "Environmental Scientist",
+        value: "Validates environmental claims and measures ecological impact",
+        impact: "Builds credibility with corporate sustainability teams"
+      },
+
+      // Investors
+      inv_1: {
+        type: "Venture Capital Firm",
+        value: "$100M+ in AI/ML focused investments with portfolio of complementary startups",
+        impact: "Provides follow-on funding, customer introductions, and enterprise go-to-market"
+      },
+      inv_2: {
+        type: "Enterprise AI Investor",
+        value: "Directly connects startups to Fortune 500 companies for pilots and partnerships",
+        impact: "Fast-tracks corporate adoption and guarantees $500K-$5M pilot budgets"
+      },
+      inv_3: {
+        type: "SaaS/AI Specialist",
+        value: "Experienced in scaling AI-powered B2B SaaS businesses to profitability",
+        impact: "Provides playbook for converting pilots into recurring revenue"
+      },
+      inv_4: {
+        type: "Infrastructure VC",
+        value: "Invested in 50+ infrastructure companies with deep DevTools expertise",
+        impact: "Connects startups to infrastructure customers actively buying"
+      },
+      inv_5: {
+        type: "Cloud-First Investor",
+        value: "Portfolio includes cloud platforms used by 10,000+ enterprises globally",
+        impact: "Provides distribution channel and co-sell partnerships"
+      },
+      inv_6: {
+        type: "DevTools Specialist",
+        value: "Founded and sold 3 DevTools companies to Fortune 500 acquirers",
+        impact: "Advises on enterprise sales strategy and M&A exit opportunities"
+      },
+      inv_7: {
+        type: "Climate Investment Fund",
+        value: "$2B committed to climate tech with focus on carbon reduction impact",
+        impact: "Patient capital for long-term pilots and guaranteed follow-on funding"
+      },
+      inv_8: {
+        type: "Climate Tech Accelerator",
+        value: "Connects startups to corporate pilot programs with $50K-$500K budgets",
+        impact: "Immediate pilot deployment with measurable ROI within 6 months"
+      },
+      inv_9: {
+        type: "Sustainability Fund",
+        value: "Access to corporations seeking ESG-compliant solutions and carbon offsets",
+        impact: "Creates dual-revenue model: product sales + carbon credit revenue"
+      },
+
+      // Startups
+      startup_1: {
+        type: "AI Pioneer",
+        value: "Industry-leading LLMs and AI infrastructure used by 10M+ users",
+        impact: "Startup can integrate with enterprise AI standard and reach vast customer base"
+      },
+      startup_2: {
+        type: "Constitutional AI",
+        value: "Frontier AI with focus on safety and enterprise deployment",
+        impact: "Adds credibility to impact startup's AI claims and customer trust"
+      },
+      startup_3: {
+        type: "Generalist AI",
+        value: "Accessible APIs and documentation for rapid AI integration",
+        impact: "Startups can quickly prototype AI features without deep ML expertise"
+      },
+      startup_4: {
+        type: "Open-Source AI Leader",
+        value: "10B+ model downloads and active developer community",
+        impact: "Massive reach and ecosystem for co-branded partnerships"
+      },
+      startup_5: {
+        type: "Data Platform",
+        value: "$43B valuation with access to Fortune 500 data infrastructure customers",
+        impact: "Direct customer channels and integration partnerships for scale"
+      },
+      startup_6: {
+        type: "Infrastructure Unicorn",
+        value: "100K+ customers managing trillions of infrastructure configurations",
+        impact: "Pre-built integrations and joint go-to-market with massive installed base"
+      },
+      startup_7: {
+        type: "Feature Management",
+        value: "50M+ features deployed daily with $100M+ ARR",
+        impact: "Revenue-sharing model and customer co-selling opportunities"
+      },
+      startup_8: {
+        type: "Security Platform",
+        value: "Protects applications for 50% of Fortune 500 companies",
+        impact: "Security compliance pathway and secure customer channels"
+      },
+      startup_9: {
+        type: "Fusion Energy Pioneer",
+        value: "Next-gen sustainable energy with $1B+ in funding and corporate partnerships",
+        impact: "Co-innovation opportunities and shared customer base in energy sector"
+      },
+      startup_10: {
+        type: "Carbon Transformation",
+        value: "Converts CO₂ into valuable products with demonstrated pilot results",
+        impact: "Cross-industry partnerships and proven pilot-to-profitability playbook"
+      },
+      startup_11: {
+        type: "Energy Storage",
+        value: "Enterprise-grade storage solving grid-scale energy challenges",
+        impact: "Complementary tech creates bundled enterprise solution"
+      },
+      startup_12: {
+        type: "Alt-Protein Leader",
+        value: "Available in 500+ retail locations with proven consumer adoption",
+        impact: "Distribution expertise and corporate supply chain partnerships"
+      },
+
+      // Enterprise Companies
+      company_1: {
+        type: "Tech Giant",
+        value: "$200B+ in annual revenue with unlimited R&D budget for innovation pilots",
+        impact: "Ultimate customer with long-term contracts and acquisition potential"
+      },
+      company_2: {
+        type: "Cloud Infrastructure Leader",
+        value: "$80B+ revenue controlling 30% of cloud market with 10M+ active customers",
+        impact: "Unlimited customer acquisition channels and global distribution"
+      },
+      company_3: {
+        type: "Energy Sector Leader",
+        value: "$50B+ revenue with commitment to net-zero 2030 and $10B climate budget",
+        impact: "Massive pilot budgets, long-term contracts, and carbon credit revenue"
+      }
+    };
+
+    const container = document.getElementById("graph-container");
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    const svg = d3.select("#graph-container")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", [0, 0, width, height])
+      .style("background-color", "var(--card)");
+
+    // Create force simulation with disjoint clustering
+    const simulation = d3.forceSimulation(data.nodes)
+      .force("link", d3.forceLink(data.links)
+        .id(d => d.id)
+        .distance(60)
+        .strength(1))
+      .force("charge", d3.forceManyBody()
+        .strength(-300)
+        .distanceMax(300))
+      .force("cluster", cluster_force)
+      .force("collision", d3.forceCollide()
+        .radius(d => 28)
+        .strength(0.7))
+      .on("tick", ticked);
+
+    // Cluster force to separate disjoint groups
+    function cluster_force(alpha) {
+      const cluster_padding = 120;
+      const centerX = { 1: width * 0.25, 2: width * 0.5, 3: width * 0.75 };
+      const centerY = height * 0.5;
+
+      data.nodes.forEach(d => {
+        const cx = centerX[d.group];
+        const cy = centerY;
+        const l = Math.sqrt((d.x - cx) ** 2 + (d.y - cy) ** 2);
+        const r = cluster_padding;
+        const k = (l - r) / l * alpha * 0.1;
+        d.vx -= (d.x - cx) * k;
+        d.vy -= (d.y - cy) * k;
+      });
+    }
+
+    // Add container group
+    const g = svg.append("g");
+
+    // Add links with gradient effect
+    const defs = svg.append("defs");
+    const linkGradient = defs.selectAll("linearGradient")
+      .data(data.links)
+      .join("linearGradient")
+      .attr("id", (d, i) => `gradient-${i}`)
+      .attr("x1", "0%").attr("y1", "0%")
+      .attr("x2", "100%").attr("y2", "100%");
+
+    linkGradient.append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", d => {
+        const sourceType = data.nodes.find(n => n.id === d.source.id).type;
+        if (sourceType === "professional") return "#0ea5e9";
+        if (sourceType === "investor") return "#f59e0b";
+        if (sourceType === "startup") return "#16a34a";
+        if (sourceType === "company") return "#a855f7";
+        return "#6b7280";
+      });
+
+    linkGradient.append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", d => {
+        const targetType = data.nodes.find(n => n.id === d.target.id).type;
+        if (targetType === "professional") return "#0ea5e9";
+        if (targetType === "investor") return "#f59e0b";
+        if (targetType === "startup") return "#16a34a";
+        if (targetType === "company") return "#a855f7";
+        return "#6b7280";
+      });
+
+    const link = g.append("g")
+      .selectAll("line")
+      .data(data.links)
+      .join("line")
+      .attr("stroke", (d, i) => `url(#gradient-${i})`)
+      .attr("stroke-width", 2)
+      .attr("stroke-opacity", 0.5);
+
+    // Add nodes with enhanced styling and distinct colors
+    const node = g.append("g")
+      .selectAll("circle")
+      .data(data.nodes)
+      .join("circle")
+      .attr("r", 28)
+      .attr("fill", d => {
+        if (d.type === "professional") return "#0ea5e9";      // Sky Blue
+        if (d.type === "investor") return "#f59e0b";           // Amber/Gold
+        if (d.type === "startup") return "#16a34a";            // Green
+        if (d.type === "company") return "#a855f7";            // Purple
+        return "#6b7280";
+      })
+      .attr("stroke", "white")
+      .attr("stroke-width", 3)
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
+
+    // Add labels
+    const labels = g.append("g")
+      .selectAll("text")
+      .data(data.nodes)
+      .join("text")
+      .attr("text-anchor", "middle")
+      .attr("dy", "0.3em")
+      .attr("font-size", "11px")
+      .attr("font-weight", "600")
+      .attr("fill", "white")
+      .attr("pointer-events", "none")
+      .text(d => d.name.split(" ")[0]);
+
+    // Tooltip
+    const tooltip = document.getElementById("tooltip");
+
+    node.on("mouseenter", function(event, d) {
+      d3.select(this).attr("stroke-width", 4);
+      tooltip.innerHTML = `
+        <strong>${d.name}</strong><br/>
+        ${d.type === "professional" ? `${d.skills}` : d.type === "investor" ? `${d.focus}` : `${d.stage}`}
+      `;
+      tooltip.classList.add("visible");
+    })
+    .on("mousemove", function(event) {
+      tooltip.style.left = (event.pageX + 10) + "px";
+      tooltip.style.top = (event.pageY - 28) + "px";
+    })
+    .on("mouseleave", function(event, d) {
+      d3.select(this).attr("stroke-width", 3);
+      tooltip.classList.remove("visible");
+    })
+    .on("click", function(event, d) {
+      showBusinessCase(d);
+    });
+
+    function ticked() {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      node
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y);
+
+      labels
+        .attr("x", d => d.x)
+        .attr("y", d => d.y);
+    }
+
+    function dragstarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragended(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    // Update stats
+    const matchCount = data.links.length;
+    const totalNodes = data.nodes.length;
+    const professionals = data.nodes.filter(n => n.type === "professional").length;
+    const investors = data.nodes.filter(n => n.type === "investor").length;
+    const startups = data.nodes.filter(n => n.type === "startup").length;
+    const companies = data.nodes.filter(n => n.type === "company").length;
+    
+    document.querySelector('[data-stat="matches"]').textContent = matchCount;
+    document.querySelector('[data-stat="accuracy"]').textContent = "87%";
+    document.querySelector('[data-stat="success"]').textContent = Math.round(matchCount * 0.58);
+
+    // Mobile nav toggle
+    const navToggle = document.querySelector('.nav-toggle');
+    const nav = document.querySelector('.main-nav');
+
+    if (navToggle && nav) {
+      navToggle.addEventListener('click', () => {
+        const isOpen = nav.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', String(isOpen));
+      });
+    }
+
+    // Business Case Modal Functions
+    function showBusinessCase(node) {
+      const modal = document.getElementById('businessCaseModal');
+      const title = document.getElementById('matchTitle');
+      const subtitle = document.getElementById('matchSubtitle');
+      const valueProp = document.getElementById('nodeValueProp');
+      const detailsSection = document.getElementById('nodeDetailsSection');
+      
+      const nodeInfo = nodeValuePropositions[node.id];
+      
+      title.textContent = `${node.name}`;
+      subtitle.textContent = `${nodeInfo.type}`;
+      valueProp.textContent = nodeInfo.value;
+      
+      // Build node-specific details HTML
+      let detailsHTML = `
+        <h4>🎯 Impact on Your Startup</h4>
+        <p>${nodeInfo.impact}</p>
+      `;
+      
+      // Add type-specific sections
+      if (node.type === "professional") {
+        detailsHTML += `
+          <h4>💼 How They Help</h4>
+          <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
+            <li>Advises on enterprise requirements and technical architecture</li>
+            <li>Introduces startup to corporate decision-makers and budget holders</li>
+            <li>Validates technology fit and ROI potential for pilot programs</li>
+            <li>Negotiates commercial terms and partnership agreements</li>
+          </ul>
+        `;
+      } else if (node.type === "investor") {
+        detailsHTML += `
+          <h4>💰 Investment & Resources</h4>
+          <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
+            <li>Provides capital for pilot execution and scaling</li>
+            <li>Direct access to portfolio companies as pilot customers</li>
+            <li>Strategic guidance on commercialization and go-to-market</li>
+            <li>Post-pilot funding for rapid scaling across customers</li>
+          </ul>
+        `;
+      } else if (node.type === "startup") {
+        detailsHTML += `
+          <h4>🤝 Partnership Opportunities</h4>
+          <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
+            <li>Bundled solution combining technologies for enterprise value</li>
+            <li>Cross-selling opportunities across shared customer bases</li>
+            <li>Integration partnerships and joint go-to-market campaigns</li>
+            <li>Shared corporate customer accounts and co-pilot programs</li>
+          </ul>
+        `;
+      } else if (node.type === "company") {
+        detailsHTML += `
+          <h4>🏢 Enterprise Partnership</h4>
+          <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
+            <li>Large-scale pilot programs with guaranteed budgets ($100K-$10M+)</li>
+            <li>Direct customer acquisition at enterprise scale</li>
+            <li>Long-term contracts and acquisition opportunities</li>
+            <li>Global distribution through existing enterprise channels</li>
+          </ul>
+        `;
+      }
+      
+      // Add pilot value section
+      if (node.type === "investor" || node.type === "company") {
+        const pilotValue = node.type === "investor" ? "$250K-$1M pilot budgets with follow-on funding" : "$500K-$10M+ pilot & commercial contracts";
+        detailsHTML += `
+          <div style="background: linear-gradient(135deg, rgba(22, 163, 74, 0.1), rgba(16, 185, 129, 0.05)); border-radius: 12px; padding: 16px; margin-top: 20px; border-left: 4px solid #16a34a;">
+            <h4 style="margin: 0 0 8px 0; color: #16a34a;">💎 Typical Pilot Value</h4>
+            <p style="margin: 0; color: var(--text);">${pilotValue}</p>
+          </div>
+        `;
+      }
+      
+      detailsSection.innerHTML = detailsHTML;
+      modal.classList.add('active');
+    }
+
+    function closeBusinessCase() {
+      const modal = document.getElementById('businessCaseModal');
+      modal.classList.remove('active');
+    }
+
+    function openContactForm() {
+      closeBusinessCase();
+      window.location.href = "#contact";
+    }
+
+    // Close modal on outside click
+    window.onclick = function(event) {
+      const modal = document.getElementById('businessCaseModal');
+      if (event.target === modal) {
+        closeBusinessCase();
+      }
+    }
+
+    // ===== CHATBOT FUNCTIONALITY =====
+    const businessCaseData = {
+      productName: "",
+      problem: "",
+      targetCompanies: "",
+      roi: "",
+      timeline: "",
+      currentStep: 0
+    };
+
+    const chatbotFlow = [
+      {
+        bot: "👋 Welcome to the Business Case Builder! Let's create a compelling case for your startup.\n\nFirst, what's the name of your product or company?",
+        key: "productName"
+      },
+      {
+        bot: "Great! 🎯 Now, what's the core problem your solution solves? (Be specific - e.g., 'Reduces water consumption by 40%')",
+        key: "problem"
+      },
+      {
+        bot: "Perfect! 💼 Which industries or types of companies would benefit most from this? (e.g., 'Fortune 500 manufacturing, utilities, food & beverage')",
+        key: "targetCompanies"
+      },
+      {
+        bot: "Excellent! 💰 What's the ROI or cost savings you can deliver? (e.g., 'Save $500K annually in water costs' or 'Increase efficiency by 30%')",
+        key: "roi"
+      },
+      {
+        bot: "Awesome! ⏱️ How long until a corporate sees measurable ROI? (e.g., '6 months' or '3-4 months')",
+        key: "timeline"
+      }
+    ];
+
+    function initChatbot() {
+      const chatContainer = document.getElementById('chatMessages');
+      chatContainer.innerHTML = '';
+      
+      // Welcome message
+      addBotMessage("👋 Welcome! Click 'Start Business Case' below to begin building your pitch.");
+      
+      const startBtn = document.createElement('div');
+      startBtn.className = 'quick-reply-buttons';
+      startBtn.innerHTML = '<button class="quick-reply-btn" onclick="startBusinessCaseChat()">🚀 Start Business Case Builder</button>';
+      chatContainer.appendChild(startBtn);
+    }
+
+    function startBusinessCaseChat() {
+      businessCaseData.currentStep = 0;
+      document.getElementById('chatMessages').innerHTML = '';
+      showNextChatQuestion();
+    }
+
+    function showNextChatQuestion() {
+      if (businessCaseData.currentStep < chatbotFlow.length) {
+        addBotMessage(chatbotFlow[businessCaseData.currentStep].bot);
+      } else {
+        showBusinessCaseSummary();
+      }
+    }
+
+    function addBotMessage(text) {
+      const chatContainer = document.getElementById('chatMessages');
+      const message = document.createElement('div');
+      message.className = 'chat-message bot';
+      message.textContent = text;
+      chatContainer.appendChild(message);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function addUserMessage(text) {
+      const chatContainer = document.getElementById('chatMessages');
+      const message = document.createElement('div');
+      message.className = 'chat-message user';
+      message.textContent = text;
+      chatContainer.appendChild(message);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      addUserMessage(message);
+      input.value = '';
+      
+      if (businessCaseData.currentStep < chatbotFlow.length) {
+        const key = chatbotFlow[businessCaseData.currentStep].key;
+        businessCaseData[key] = message;
+        businessCaseData.currentStep++;
+        
+        setTimeout(() => {
+          showNextChatQuestion();
+        }, 500);
+      }
+    }
+
+    function handleChatKeypress(event) {
+      if (event.key === 'Enter') {
+        sendChatMessage();
+      }
+    }
+
+    function showBusinessCaseSummary() {
+      addBotMessage("🎉 Excellent! Your business case is ready! Here's your pitch:");
+      
+      const summary = `
+💎 BUSINESS CASE SUMMARY
+
+📦 Product: ${businessCaseData.productName}
+🎯 Problem Solved: ${businessCaseData.problem}
+🏢 Target Customers: ${businessCaseData.targetCompanies}
+💰 Value Proposition: ${businessCaseData.roi}
+⏱️ ROI Timeline: ${businessCaseData.timeline}
+
+💡 NEXT STEPS:
+1. Use this case when approaching corporate prospects
+2. Highlight specific pain points from your target list
+3. Show pilot programs that proved ROI
+4. Propose revenue share: 25-30% of cost savings
+
+🚀 Ready to pitch to investors or corporates?
+      `;
+      
+      const chatContainer = document.getElementById('chatMessages');
+      const summaryDiv = document.createElement('div');
+      summaryDiv.className = 'chat-message bot';
+      summaryDiv.style.whiteSpace = 'pre-line';
+      summaryDiv.style.maxWidth = '100%';
+      summaryDiv.textContent = summary;
+      chatContainer.appendChild(summaryDiv);
+      
+      // Add action buttons
+      const actionBtns = document.createElement('div');
+      actionBtns.className = 'quick-reply-buttons';
+      actionBtns.innerHTML = `
+        <button class="quick-reply-btn" onclick="startBusinessCaseChat()">📝 Create Another Case</button>
+        <button class="quick-reply-btn" onclick="downloadBusinessCase()">📥 Download Case</button>
+        <button class="quick-reply-btn" onclick="openContactForm()">🤝 Connect with Investors</button>
+      `;
+      chatContainer.appendChild(actionBtns);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function downloadBusinessCase() {
+      const summary = `BUSINESS CASE: ${businessCaseData.productName}
+
+PROBLEM SOLVED
+${businessCaseData.problem}
+
+TARGET CUSTOMERS
+${businessCaseData.targetCompanies}
+
+VALUE PROPOSITION
+${businessCaseData.roi}
+
+ROI TIMELINE
+${businessCaseData.timeline}
+
+RECOMMENDED REVENUE MODEL
+- License: $X/month recurring revenue
+- Cost Savings Share: 25-30% of annual savings
+- Example: If saving corporate $500K/year → $125K-$150K annual partnership revenue
+
+PILOT PATHWAY
+Phase 1 (Months 1-3): Pilot deployment and testing
+Phase 2 (Months 4-6): Proof of value and ROI measurement  
+Phase 3 (Months 7+): Commercial scaling to $50K-$500K+ ARR
+
+Generated by DIN - Digital Impact Network
+Visit: ai-matching.html`;
+
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(summary));
+      element.setAttribute('download', `${businessCaseData.productName.replace(/\s+/g, '_')}_BusinessCase.txt`);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+      
+      addBotMessage("✅ Business case downloaded! Check your downloads folder.");
+    }
+
+    function toggleChatbot() {
+      const container = document.getElementById('chatbotContainer');
+      container.classList.toggle('minimized');
+      if (!container.classList.contains('minimized') && document.getElementById('chatMessages').children.length === 0) {
+        initChatbot();
+      }
+    }
+
+    // Initialize chatbot on page load
+    window.addEventListener('load', () => {
+      initChatbot();
+    });
+  </script>
+</body>
+</html>

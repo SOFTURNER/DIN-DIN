@@ -24,11 +24,11 @@ export function Chip({
       title={title}
       aria-pressed={active}
       className={cx(
-        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 transition',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500',
+        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold transition',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16a34a]/40',
         active
-          ? 'bg-brand-600 text-white ring-brand-600'
-          : 'bg-white text-slate-600 ring-slate-200 hover:bg-slate-50 hover:text-slate-900',
+          ? 'bg-[#16a34a] text-white'
+          : 'bg-white text-[#6b7280] ring-1 ring-[rgba(0,0,0,0.1)] hover:bg-[#f9fafb] hover:text-[#1f2937]',
       )}
     >
       {dotColor && (
@@ -60,16 +60,16 @@ export function Toggle({
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className="group flex w-full items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-left transition hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+      className="group flex w-full items-center justify-between gap-3 rounded-xl px-2 py-1.5 text-left transition hover:bg-[#f9fafb] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16a34a]/40"
     >
       <span className="min-w-0">
-        <span className="block text-xs font-semibold text-slate-800">{label}</span>
-        {hint && <span className="block text-[10px] leading-tight text-slate-500">{hint}</span>}
+        <span className="block text-xs font-semibold text-[#1f2937]">{label}</span>
+        {hint && <span className="block text-[10px] leading-tight text-[#6b7280]">{hint}</span>}
       </span>
       <span
         className={cx(
           'relative h-4.5 w-8 shrink-0 rounded-full transition',
-          checked ? 'bg-brand-600' : 'bg-slate-300',
+          checked ? 'bg-[#16a34a]' : 'bg-[#d1d5db]',
         )}
       >
         <span
@@ -86,7 +86,7 @@ export function Toggle({
 export function SectionLabel({ children, action }: { children: ReactNode; action?: ReactNode }) {
   return (
     <div className="mb-2 flex items-center justify-between">
-      <h3 className="text-[10px] font-bold tracking-[0.14em] text-slate-400 uppercase">
+      <h3 className="text-[10px] font-bold tracking-[0.14em] text-[#6b7280] uppercase">
         {children}
       </h3>
       {action}
@@ -98,8 +98,8 @@ export function Badge({ children, className }: { children: ReactNode; className?
   return (
     <span
       className={cx(
-        'inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold ring-1',
-        className ?? 'bg-slate-50 text-slate-600 ring-slate-200',
+        'inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-semibold ring-1',
+        className ?? 'bg-[#f9fafb] text-[#6b7280] ring-[rgba(0,0,0,0.1)]',
       )}
     >
       {children}
@@ -109,9 +109,9 @@ export function Badge({ children, className }: { children: ReactNode; className?
 
 export function EmptyState({ title, hint }: { title: string; hint: string }) {
   return (
-    <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-8 text-center">
-      <p className="text-sm font-semibold text-slate-700">{title}</p>
-      <p className="mt-1 text-xs text-slate-500">{hint}</p>
+    <div className="rounded-2xl border border-dashed border-[rgba(0,0,0,0.1)] bg-[#f9fafb] px-4 py-8 text-center">
+      <p className="text-sm font-semibold text-[#1f2937]">{title}</p>
+      <p className="mt-1 text-xs text-[#6b7280]">{hint}</p>
     </div>
   )
 }

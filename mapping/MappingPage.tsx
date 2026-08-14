@@ -29,7 +29,7 @@ const TABS = [
   { id: 'events', label: 'Event finder', icon: Calendar },
 ] as const
 
-export default function App() {
+export default function MappingPage() {
   const today = useMemo(() => new Date(), [])
 
   const [tab, setTab] = useState<Tab>('map')
@@ -83,33 +83,29 @@ export default function App() {
   ).length
 
   return (
-    <div className="flex h-full w-full flex-col bg-white">
-      <header className="flex h-16 shrink-0 items-center justify-between gap-6 border-b border-slate-200 px-5">
-        <div className="flex items-center gap-3">
-          <div className="grid size-9 place-items-center rounded-xl bg-brand-600 text-[11px] font-extrabold tracking-tight text-white">
-            DIN
-          </div>
-          <div className="min-w-0">
-            <h1 className="text-[15px] leading-tight font-extrabold text-slate-900">
-              Digital Impact Network
-            </h1>
-            <p className="truncate text-[11px] font-medium text-slate-500">
-              Pilot without cash, between prototype and first sales
-            </p>
-          </div>
+    <div className="din-map flex h-full w-full flex-col bg-white">
+      {/* Tool strip under the site nav — brand lives in the site topbar */}
+      <div className="flex h-14 shrink-0 items-center justify-between gap-4 border-b border-[rgba(0,0,0,0.1)] px-4 sm:px-5">
+        <div className="min-w-0">
+          <p className="truncate text-[11px] font-semibold tracking-[0.08em] text-[#16a34a] uppercase">
+            Mapping
+          </p>
+          <p className="truncate text-xs font-medium text-[#6b7280]">
+            Pilot without cash, between prototype and first sales
+          </p>
         </div>
 
-        <nav className="flex items-center gap-1 rounded-xl bg-slate-100 p-1">
+        <nav className="flex items-center gap-1 rounded-full bg-[#f3f4f6] p-1">
           {TABS.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
               type="button"
               onClick={() => setTab(id)}
               className={cx(
-                'inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-bold transition',
+                'inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition',
                 tab === id
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-800',
+                  ? 'bg-white text-[#1f2937] shadow-sm'
+                  : 'text-[#6b7280] hover:text-[#1f2937]',
               )}
             >
               <Icon className="size-3.5" />
@@ -118,21 +114,15 @@ export default function App() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-5 lg:flex">
+        <div className="hidden items-center gap-5 md:flex">
           <Stat value={visibleActors.length} label="on map" />
-          <Stat value={noCashCount} label="no cash needed" accent="text-brand-600" />
+          <Stat value={noCashCount} label="no cash needed" accent />
           <Stat value={visibleEvents.length} label="events" />
-          <button
-            type="button"
-            className="rounded-full bg-brand-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-700"
-          >
-            Request access
-          </button>
         </div>
-      </header>
+      </div>
 
       <div className="flex min-h-0 flex-1">
-        <div className="z-20 flex w-[340px] shrink-0 flex-col border-r border-slate-200 bg-white">
+        <div className="z-20 flex w-[320px] shrink-0 flex-col border-r border-[rgba(0,0,0,0.1)] bg-white sm:w-[340px]">
           {tab === 'map' ? (
             <MapSidebar
               filters={filters}
@@ -153,7 +143,7 @@ export default function App() {
           )}
         </div>
 
-        <main className="relative min-w-0 flex-1 bg-[#eceff3]">
+        <main className="relative min-w-0 flex-1 bg-[#f3f4f6]">
           <GlobeView
             actors={visibleActors}
             events={visibleEvents}
@@ -168,7 +158,7 @@ export default function App() {
           />
 
           <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 p-4">
-            <div className="pointer-events-auto flex items-center gap-0.5 rounded-xl border border-slate-200 bg-white/95 p-1 shadow-sm backdrop-blur">
+            <div className="pointer-events-auto flex items-center gap-0.5 rounded-full border border-[rgba(0,0,0,0.1)] bg-white/95 p-1 shadow-[0_10px_25px_rgba(0,0,0,0.08)] backdrop-blur">
               <SegButton
                 active={false}
                 onClick={() => setFitToken((n) => n + 1)}
@@ -177,7 +167,7 @@ export default function App() {
               />
               {tab === 'map' && (
                 <>
-                  <span className="mx-1 h-4 w-px bg-slate-200" />
+                  <span className="mx-1 h-4 w-px bg-[rgba(0,0,0,0.1)]" />
                   <SegButton
                     active={showEventsOnMap}
                     onClick={() => setShowEventsOnMap((v) => !v)}
@@ -189,15 +179,15 @@ export default function App() {
             </div>
           </div>
 
-          <div className="pointer-events-none absolute bottom-4 left-4 z-10 rounded-xl border border-slate-200 bg-white/95 px-3 py-2.5 shadow-sm backdrop-blur">
-            <p className="mb-1.5 text-[9px] font-bold tracking-[0.14em] text-slate-400 uppercase">
+          <div className="pointer-events-none absolute bottom-4 left-4 z-10 rounded-2xl border border-[rgba(0,0,0,0.1)] bg-white/95 px-3 py-2.5 shadow-[0_10px_25px_rgba(0,0,0,0.08)] backdrop-blur">
+            <p className="mb-1.5 text-[9px] font-bold tracking-[0.14em] text-[#6b7280] uppercase">
               Legend
             </p>
             <div className="grid grid-cols-2 gap-x-4 gap-y-1">
               {ACTOR_KINDS.map((kind) => (
                 <span
                   key={kind}
-                  className="inline-flex items-center gap-1.5 text-[10px] font-medium text-slate-600"
+                  className="inline-flex items-center gap-1.5 text-[10px] font-medium text-[#1f2937]"
                 >
                   <span
                     className="size-1.5 rounded-full"
@@ -207,8 +197,8 @@ export default function App() {
                 </span>
               ))}
               {eventsOnMap && (
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-medium text-slate-600">
-                  <span className="size-1.5 rounded-full ring-[1.5px] ring-orange-500" />
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-medium text-[#1f2937]">
+                  <span className="size-1.5 rounded-full ring-[1.5px] ring-[#ea580c]" />
                   Event
                 </span>
               )}
@@ -231,13 +221,18 @@ export default function App() {
   )
 }
 
-function Stat({ value, label, accent }: { value: number; label: string; accent?: string }) {
+function Stat({ value, label, accent }: { value: number; label: string; accent?: boolean }) {
   return (
     <div className="text-right">
-      <p className={cx('text-base leading-none font-extrabold', accent ?? 'text-slate-900')}>
+      <p
+        className={cx(
+          'text-base leading-none font-extrabold',
+          accent ? 'text-[#16a34a]' : 'text-[#1f2937]',
+        )}
+      >
         {value}
       </p>
-      <p className="mt-1 text-[10px] leading-none font-medium text-slate-500">{label}</p>
+      <p className="mt-1 text-[10px] leading-none font-medium text-[#6b7280]">{label}</p>
     </div>
   )
 }
@@ -258,8 +253,10 @@ function SegButton({
       type="button"
       onClick={onClick}
       className={cx(
-        'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-bold transition',
-        active ? 'bg-brand-600 text-white' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900',
+        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition',
+        active
+          ? 'bg-[#16a34a] text-white'
+          : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#1f2937]',
       )}
     >
       <Icon className="size-3.5" />
