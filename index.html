@@ -44,7 +44,7 @@
 
               <div class="cta-row">
                 <a href="#contact" class="button button-primary">Join the network</a>
-                <a href="#leaders" class="button button-secondary">Meet the community</a>
+                <a href="#matching" class="button button-secondary">See AI Matching</a>
               </div>
 
               <div class="mini-stats" aria-label="Network stats">
@@ -127,6 +127,91 @@
             <span>LaunchGrid</span>
             <span>Foundry</span>
             <span>ImpactRise</span>
+          </div>
+        </section>
+
+        <section id="matching" class="matching-section alt-section">
+          <div class="container">
+            <div class="section-heading">
+              <span class="eyebrow">Powered by AI & LinkedIn</span>
+              <h2>Intelligent Matching</h2>
+              <p>
+                Our AI engine analyzes professional profiles, experience, and goals to create optimal
+                connections. Explore how DIN identifies matching opportunities across professionals,
+                investors, startups, and enterprise partners — shown as a
+                <a href="https://observablehq.com/@d3/disjoint-force-directed-graph/2" target="_blank" rel="noopener noreferrer">disjoint force-directed graph</a>.
+              </p>
+            </div>
+
+            <div class="viz-wrapper">
+              <div id="graph-container"></div>
+              <div class="match-legend" aria-label="Node legend">
+                <div class="match-legend__item">
+                  <span class="match-legend__dot" style="background: #0ea5e9"></span>
+                  <span>Professionals</span>
+                </div>
+                <div class="match-legend__item">
+                  <span class="match-legend__dot" style="background: #f59e0b"></span>
+                  <span>Investors</span>
+                </div>
+                <div class="match-legend__item">
+                  <span class="match-legend__dot" style="background: #16a34a"></span>
+                  <span>Startups</span>
+                </div>
+                <div class="match-legend__item">
+                  <span class="match-legend__dot" style="background: #a855f7"></span>
+                  <span>Enterprise</span>
+                </div>
+              </div>
+              <div class="match-tooltip" id="match-tooltip" role="tooltip"></div>
+            </div>
+
+            <div class="match-stats" aria-label="Matching stats">
+              <div class="match-stat">
+                <div class="match-stat__value" data-stat="matches">0</div>
+                <div class="match-stat__label">Active Matches</div>
+              </div>
+              <div class="match-stat">
+                <div class="match-stat__value" data-stat="accuracy">0%</div>
+                <div class="match-stat__label">Match Accuracy</div>
+              </div>
+              <div class="match-stat">
+                <div class="match-stat__value" data-stat="success">0</div>
+                <div class="match-stat__label">Successful Connections</div>
+              </div>
+            </div>
+
+            <div class="match-overview">
+              <h3>Network Overview</h3>
+              <p>Our AI matching engine analyzes three distinct clusters of the innovation ecosystem:</p>
+              <ul class="match-overview__list">
+                <li>
+                  <strong style="color: #0ea5e9">AI/ML & Enterprise</strong>
+                  — OpenAI, Anthropic, Hugging Face connecting with top talent and enterprise investors (Sequoia, a16z)
+                </li>
+                <li>
+                  <strong style="color: #f59e0b">Cloud Infrastructure</strong>
+                  — Databricks, HashiCorp, Snyk with DevOps experts and infrastructure-focused VCs
+                </li>
+                <li>
+                  <strong style="color: #16a34a">Climate Tech & Sustainability</strong>
+                  — Commonwealth Fusion, Twelve, Form Energy with climate investors (Breakthrough Energy)
+                </li>
+                <li>
+                  <strong style="color: #a855f7">Enterprise Players</strong>
+                  — Google AI, AWS, Tesla Energy providing strategic partnerships and resources
+                </li>
+              </ul>
+            </div>
+
+            <div class="matching-cta">
+              <h3>Ready to Connect?</h3>
+              <p>
+                Connect your LinkedIn profile to start receiving AI-powered recommendations tailored to your
+                professional goals.
+              </p>
+              <a href="contact.html" class="button button-primary">Request Access</a>
+            </div>
           </div>
         </section>
 
@@ -271,7 +356,8 @@
       </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
+    <script type="module" src="matching-graph.js"></script>
   </body>
 </html>
 
