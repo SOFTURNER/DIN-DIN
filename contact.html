@@ -3,124 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Apply to join the Digital Impact Network." />
-    <title>DIN | Contact</title>
+    <meta name="description" content="Apply to join the founding Digital Impact Network." />
+    <title>DIN | Join the founding network</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    
     <div class="page-shell">
-    <header class="din-glass din-header">
-      <a href="index.html" class="din-header__brand" aria-label="Digital Impact Network home">
-        <span class="din-dash__mark">DIN</span>
-        <span class="din-header__name">Digital Impact Network</span>
-      </a>
-
-      <nav class="din-header__nav" aria-label="Primary">
-        <a href="index.html">About us</a>
-        <a href="mapping.html">Mapping</a>
-      </nav>
-
-      <a href="contact.html" class="din-header__cta">Request Access</a>
-    </header>
-
-    <main>
-      <section class="page-hero">
-        <div class="container page-hero-grid contact-grid">
-          <div>
-            <span class="eyebrow">Apply to join</span>
-            <h1>Connect with the right network for your next move.</h1>
-            <p>Whether you are a founder, leader, operator, or investor, DIN helps you build smarter relationships that create long-term impact.</p>
+      <header class="din-glass din-header">
+        <a href="index.html" class="din-header__brand" aria-label="Digital Impact Network home"><span class="din-dash__mark">DIN</span><span class="din-header__name">Digital Impact Network</span></a>
+        <nav class="din-header__nav" aria-label="Primary"><a href="index.html">About DIN</a><a href="mapping.html">Network map</a></nav>
+        <a href="contact.html" class="din-header__cta" aria-current="page">Join DIN</a>
+      </header>
+      <main>
+        <section class="page-hero">
+          <div class="container page-hero-grid contact-grid">
+            <div><span class="eyebrow">Founding 100</span><h1>Tell us what you're building — and what would help.</h1><p>DIN is launching as a curated network. Start with a short application so we can understand your goals, capabilities, and the relationships that could create real value.</p></div>
+            <div class="info-card highlight"><p class="label">What happens next</p><h3>We review for fit, then help make the first useful connection.</h3><ul class="check-list compact"><li>Human-reviewed applications</li><li>Relevant member matching</li><li>High-context introductions</li></ul></div>
           </div>
-
-          <div class="info-card highlight">
-            <p class="label">Membership</p>
-            <h3>Start with a short application and our team will follow up.</h3>
-            <ul class="check-list compact">
-              <li>Private review and matching</li>
-              <li>Tailored introductions by sector</li>
-              <li>Member onboarding within 7 days</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container form-layout">
-          <div class="form-panel">
-            <form class="application-form">
-              <div class="field-row">
-                <label>
-                  Full name
-                  <input type="text" name="name" placeholder="Your name" />
-                </label>
-                <label>
-                  Email
-                  <input type="email" name="email" placeholder="you@example.com" />
-                </label>
-              </div>
-
-              <div class="field-row">
-                <label>
-                  Role / Company
-                  <input type="text" name="company" placeholder="Founder, investor, operator..." />
-                </label>
-                <label>
-                  Interest
-                  <select name="interest">
-                    <option value="">Select</option>
-                    <option>Startup founder</option>
-                    <option>Industry leader</option>
-                    <option>Investor</option>
-                    <option>Partner / ecosystem</option>
-                  </select>
-                </label>
-              </div>
-
-              <label>
-                Tell us about your goals
-                <textarea name="message" rows="6" placeholder="Briefly describe your focus, sector, and how you want to engage with the DIN network."></textarea>
-              </label>
-
-              <button type="submit" class="button button-primary">Submit application</button>
-            </form>
-          </div>
-
-          <aside class="contact-side">
-            <div class="info-card">
-              <p class="label">Reach us directly</p>
-              <h3>hello@digitalimpactnetwork.com</h3>
-              <ul class="list-plain">
-                <li>New York</li>
-                <li>London</li>
-                <li>Nairobi</li>
-              </ul>
+        </section>
+        <section class="section">
+          <div class="container form-layout">
+            <div class="form-panel">
+              <form class="application-form" id="application-form" action="mailto:hello@digitalimpactnetwork.com" method="post" enctype="text/plain">
+                <div class="field-row">
+                  <label>Full name<input required type="text" name="name" placeholder="Your name" autocomplete="name" /></label>
+                  <label>Email<input required type="email" name="email" placeholder="you@example.com" autocomplete="email" /></label>
+                </div>
+                <div class="field-row">
+                  <label>Role / organization<input required type="text" name="organization" placeholder="Founder, investor, operator..." /></label>
+                  <label>Member type<select required name="member_type"><option value="">Select one</option><option>Builder / founder</option><option>Industry leader</option><option>Investor / capital</option><option>Organization / ecosystem</option><option>Researcher / policy</option></select></label>
+                </div>
+                <div class="field-row">
+                  <label>Primary sector<select name="sector"><option>Climate</option><option>Water</option><option>Energy</option><option>AI</option><option>Infrastructure</option><option>Health</option><option>Finance</option><option>Education</option><option>Other</option></select></label>
+                  <label>Location<input type="text" name="location" placeholder="City, country" autocomplete="address-level2" /></label>
+                </div>
+                <label>What are you building / working on?<textarea required name="building" rows="4" placeholder="Tell us what you're focused on right now."></textarea></label>
+                <label>What are you looking for?<textarea name="needs" rows="4" placeholder="People, capital, customers, partners, expertise, opportunities..."></textarea></label>
+                <label>What can you offer the network?<textarea name="offers" rows="4" placeholder="Expertise, introductions, capital, partnerships, mentorship..."></textarea></label>
+                <label>LinkedIn profile<input type="url" name="linkedin" placeholder="https://www.linkedin.com/in/..." /></label>
+                <button type="submit" class="button button-primary">Submit founding application</button>
+                <p class="form-note">This prototype opens your email client with the application details. We can replace it with a database-backed application flow next.</p>
+              </form>
             </div>
-          </aside>
-        </div>
-      </section>
-    </main>
-
-    <footer class="din-glass din-footer">
-      <p class="din-footer__copy">© <span id="year"></span> Digital Impact Network</p>
-      <nav class="din-footer__links" aria-label="Footer">
-        <a href="index.html">About us</a>
-        <a href="mapping.html">Mapping</a>
-        <a href="contact.html">Contact</a>
-        <a href="mailto:hello@digitalimpactnetwork.com">hello@digitalimpactnetwork.com</a>
-      </nav>
-      <p class="din-footer__tag">Built for connection, capital, and momentum.</p>
-    </footer>
-
+            <aside class="contact-side"><div class="info-card"><p class="label">DIN principle</p><h3>Start with the relationship, not the platform.</h3><p>The first version of DIN will be intentionally curated. Your application helps us understand where a useful introduction could actually happen.</p></div></aside>
+          </div>
+        </section>
+      </main>
+      <footer class="din-glass din-footer"><p class="din-footer__copy">© <span id="year"></span> Digital Impact Network</p><nav class="din-footer__links" aria-label="Footer"><a href="index.html">About DIN</a><a href="mapping.html">Network map</a><a href="mailto:hello@digitalimpactnetwork.com">Email</a></nav><p class="din-footer__tag">Build what comes next.</p></footer>
     </div>
-
-
     <script type="module" src="script.js"></script>
   </body>
 </html>
-
-
-
